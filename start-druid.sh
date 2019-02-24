@@ -21,7 +21,7 @@ if [ "$STORAGE_TYPE" != "s3" ]; then
     sed -ri 's#druid.s3.secretKey.*#druid.s3.secretKey='${S3_SECRET_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
     sed -ri 's#druid.storage.bucket.*#druid.storage.bucket='${S3_STORAGE_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
     sed -ri 's#druid.storage.baseKey.*#druid.storage.baseKey='${S3_STORAGE_BASE_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
-    sed -ri 's#druid.indexer.logs.s3Bucket.*#druid.indexer.logs.s3Bucket='${S3_INDEXING_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    # sed -ri 's#druid.indexer.logs.s3Bucket.*#druid.indexer.logs.s3Bucket='${S3_INDEXING_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
 if [ "$DRUID_HOSTNAME" != "-" ]; then
