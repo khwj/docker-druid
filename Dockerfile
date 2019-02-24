@@ -1,20 +1,10 @@
-# VERSION 0.12.3-2
+# Forked from https://github.com/maver1ck/druid-docker
+
 FROM anapsix/alpine-java:8_server-jre_unlimited
 
-MAINTAINER Maciej Brynski <maciek@brynski.pl>
-# Forked from https://github.com/saidimu/druid-docker
+LABEL MAINTAINER "Khwunchai Jaengsawang <khwunchai.j@ku.th>"
 
-# ENV DB_HOST            mysql
-# ENV DB_PORT            3306
-# ENV DB_DBNAME          druid
-# ENV DB_USERNAME        druid
-# ENV DB_PASSWORD        druid
-# ENV ZOOKEEPER_HOST     zookeeper
-# ENV S3_STORAGE_BUCKET  druid-deep-storage
-# ENV S3_INDEXING_BUCKET druid-indexing
-# ENV S3_ACCESS_KEY      xxxxxxxxxxxx
-# ENV S3_ACCESS_KEY      xxxxxxxxxxxx
-ENV DRUID_VERSION      0.12.3
+ENV DRUID_VERSION      0.13.0
 
 # Druid env variable
 ENV DRUID_XMX          '-'
