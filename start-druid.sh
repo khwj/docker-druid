@@ -9,6 +9,8 @@ fi
 
 DB_CONNECT_URI="jdbc:${DB_TYPE}\:\/\/${DB_HOST}\:${DB_PORT}\/${DB_DBNAME}"
 
+sed -ri 's/druid.host=.*/druid.host='$(hostname)'/g' /opt/druid/conf/druid/$1/runtime.properties
+
 sed -ri 's#druid.zk.service.host.*#druid.zk.service.host='${ZOOKEEPER_HOST}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 sed -ri 's#druid.metadata.storage.type.*#druid.metadata.storage.type='${DB_TYPE}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 sed -ri 's#druid.metadata.storage.connector.connectURI.*#druid.metadata.storage.connector.connectURI='${DB_CONNECT_URI}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
