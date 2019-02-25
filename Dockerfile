@@ -4,7 +4,7 @@ FROM anapsix/alpine-java:8_server-jre_unlimited
 
 LABEL MAINTAINER "Khwunchai Jaengsawang <khwunchai.j@ku.th>"
 
-ENV DRUID_VERSION      0.13.0
+ENV DRUID_VERSION      0.12.3
 
 # Druid env variable
 ENV DRUID_XMX          '-'
