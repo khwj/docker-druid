@@ -4,7 +4,7 @@ FROM anapsix/alpine-java:8_server-jre_unlimited
 
 LABEL MAINTAINER "Khwunchai Jaengsawang <khwunchai.j@ku.th>"
 
-ARG MYSQL_CLIENT_VERSION=5.1.38
+ARG MYSQL_CONNECTOR_VERSION=5.1.38
 ENV DRUID_VERSION=0.12.3
 
 # Druid env variable
@@ -21,10 +21,11 @@ RUN apk update \
     && curl \
       http://static.druid.io/artifacts/releases/druid-$DRUID_VERSION-bin.tar.gz | tar -xzf - -C /opt \
     && ln -s /opt/druid-$DRUID_VERSION /opt/druid \
-    && curl http://static.druid.io/artifacts/releases/mysql-metadata-storage-$DRUID_VERSION.tar.gz | tar -xzf - -C /opt/druid/extensions \
-    && curl -o /opt/druid/extensions/mysql-connector-java.jar \
-      http://central.maven.org/maven2/mysql/mysql-connector-java/$MYSQL_CLIENT_VERSION/mysql-connector-java-$MYSQL_CLIENT_VERSION.jar \
-    && curl -o /opt/druid/extensions/druid-distinctcount.jar \
+    && mkdir -p /opt/druid/extensions/mysql-metadata-storage \
+    && mkdir -p /opt/druid/extensions/druid-distinctcount \
+    && curl -o /opt/druid/extensions/mysql-metadata-storage/mysql-connector-java.jar \
+      http://central.maven.org/maven2/mysql/mysql-connector-java/$MYSQL_CONNECTOR_VERSION/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar \
+    && curl -o /opt/druid/extensions/druid-distinctcount/druid-distinctcount.jar \
       http://central.maven.org/maven2/io/druid/extensions/contrib/druid-distinctcount/$DRUID_VERSION/druid-distinctcount-$DRUID_VERSION.jar
 
 COPY conf /opt/druid/conf
