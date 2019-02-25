@@ -4,13 +4,10 @@ FROM anapsix/alpine-java:8_server-jre_unlimited
 
 LABEL MAINTAINER "Khwunchai Jaengsawang <khwunchai.j@ku.th>"
 
-ENV DRUID_VERSION      0.12.3
+ARG MYSQL_CLIENT_VERSION=5.1.38
+ENV DRUID_VERSION=0.12.3
 
 # Druid env variable
-ENV DRUID_XMX          '-'
-ENV DRUID_XMS          '-'
-ENV DRUID_NEWSIZE      '-'
-ENV DRUID_MAXNEWSIZE   '-'
 ENV DRUID_HOSTNAME     '-'
 ENV DRUID_LOGLEVEL     '-'
 ENV DRUID_EXTENSIONS   '-'
@@ -22,10 +19,13 @@ RUN apk update \
     && apk add --no-cache bash curl \
     && mkdir /tmp/druid \
     && curl \
-    http://static.druid.io/artifacts/releases/druid-$DRUID_VERSION-bin.tar.gz | tar -xzf - -C /opt \
+      http://static.druid.io/artifacts/releases/druid-$DRUID_VERSION-bin.tar.gz | tar -xzf - -C /opt \
     && ln -s /opt/druid-$DRUID_VERSION /opt/druid \
     && curl http://static.druid.io/artifacts/releases/mysql-metadata-storage-$DRUID_VERSION.tar.gz | tar -xzf - -C /opt/druid/extensions \
-    && curl http://central.maven.org/maven2/io/druid/extensions/contrib/druid-distinctcount/$DRUID_VERSION/druid-distinctcount-$DRUID_VERSION.jar | tar -xzf - -C /opt/druid/extensions
+    && curl -o /opt/druid/extensions/mysql-connector-java.jar \
+      http://central.maven.org/maven2/mysql/mysql-connector-java/$MYSQL_CLIENT_VERSION/mysql-connector-java-$MYSQL_CLIENT_VERSION.jar \
+    && curl -o /opt/druid/extensions/druid-distinctcount.jar \
+      http://central.maven.org/maven2/io/druid/extensions/contrib/druid-distinctcount/$DRUID_VERSION/druid-distinctcount-$DRUID_VERSION.jar
 
 COPY conf /opt/druid/conf
 COPY start-druid.sh /start-druid.sh
