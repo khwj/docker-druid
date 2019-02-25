@@ -15,7 +15,7 @@ sed -ri 's#druid.metadata.storage.connector.connectURI.*#druid.metadata.storage.
 sed -ri 's#druid.metadata.storage.connector.user.*#druid.metadata.storage.connector.user='${DB_USERNAME}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 sed -ri 's#druid.metadata.storage.connector.password.*#druid.metadata.storage.connector.password='${DB_PASSWORD}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 
-if [ "$DRUID_EXTENSIONS" == "s3" ]; then
+if [ "$DRUID_EXTENSIONS" != "-" ]; then
     sed -ri 's#druid.extensions.loadList=*#druid.extensions.loadList='${DRUID_EXTENSIONS}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
