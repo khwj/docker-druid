@@ -23,8 +23,9 @@ RUN apk update \
     && mkdir /tmp/druid \
     && curl \
     http://static.druid.io/artifacts/releases/druid-$DRUID_VERSION-bin.tar.gz | tar -xzf - -C /opt \
-    && ln -s /opt/druid-$DRUID_VERSION /opt/druid
-RUN curl http://static.druid.io/artifacts/releases/mysql-metadata-storage-$DRUID_VERSION.tar.gz | tar -xzf - -C /opt/druid/extensions
+    && ln -s /opt/druid-$DRUID_VERSION /opt/druid \
+    && curl http://static.druid.io/artifacts/releases/mysql-metadata-storage-$DRUID_VERSION.tar.gz | tar -xzf - -C /opt/druid/extensions \
+    && curl http://central.maven.org/maven2/io/druid/extensions/contrib/druid-distinctcount/$DRUID_VERSION/druid-distinctcount-$DRUID_VERSION.jar | tar -xzf - -C /opt/druid/extensions
 
 COPY conf /opt/druid/conf
 COPY start-druid.sh /start-druid.sh
