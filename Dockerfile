@@ -21,13 +21,13 @@ RUN apk update \
     && curl \
       http://static.druid.io/artifacts/releases/druid-$DRUID_VERSION-bin.tar.gz | tar -xzf - -C /opt \
     && ln -s /opt/druid-$DRUID_VERSION /opt/druid \
-    && mkdir -p /opt/druid/extensions/mysql-metadata-storage \
-    && mkdir -p /opt/druid/extensions/druid-distinctcount \
     && curl http://static.druid.io/artifacts/releases/mysql-metadata-storage-$DRUID_VERSION.tar.gz \
       | tar -xzf - -C /opt/druid/extensions \
-    # && curl -o /opt/druid/extensions/mysql-metadata-storage/mysql-connector-java.jar \
+    # && mkdir -p /opt/druid/extensions/mysql-metadata-storage \
+    # && curl -o /opt/druid/extensions/mysql-metadata-storage/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar \
       # http://central.maven.org/maven2/mysql/mysql-connector-java/$MYSQL_CONNECTOR_VERSION/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar \
-    && curl -o /opt/druid/extensions/druid-distinctcount/druid-distinctcount.jar \
+    && mkdir -p /opt/druid/extensions/druid-distinctcount \
+    && curl -o /opt/druid/extensions/druid-distinctcount/druid-distinctcount-$DRUID_VERSION.jar \
       http://central.maven.org/maven2/io/druid/extensions/contrib/druid-distinctcount/$DRUID_VERSION/druid-distinctcount-$DRUID_VERSION.jar
 
 COPY conf /opt/druid/conf

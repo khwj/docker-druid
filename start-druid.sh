@@ -48,4 +48,13 @@ if [ "$DRUID_SEGMENTCACHE_LOCATION" != "-" ]; then
     sed -ri 's/var\/druid\/segment-cache/'${DRUID_SEGMENTCACHE_LOCATION}'/g' /opt/druid/conf/druid/$1/runtime.properties
 fi
 
+if [ "$1" == "historical" ]; then
+    if [ "$PROCESSING_BUFFER_SIZEBYTES" != "" ]; then
+        sed -ri 's/druid.processing.buffer.sizeBytes=.*/druid.processing.buffer.sizeBytes='${PROCESSING_BUFFER_SIZEBYTES}'/g' /opt/druid/conf/druid/$1/runtime.properties
+    fi
+    if [ "$PROCESSING_NUM_THREADS" != "" ]; then
+        sed -ri 's/druid.processing.buffer.sizeBytes=.*/druid.processing.buffer.sizeBytes='${PROCESSING_BUFFER_SIZE}'/g' /opt/druid/conf/druid/$1/runtime.properties
+    fi
+else
+
 java ${JAVA_OPTS} -cp /opt/druid/conf/druid/_common:/opt/druid/conf/druid/$1:/opt/druid/lib/* io.druid.cli.Main server $@
