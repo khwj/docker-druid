@@ -67,6 +67,6 @@ if [ "$1" == "historical" ]; then
     if [ "$DRUID_PROCESSING_NUM_THREADS" != "" ]; then
         sed -ri 's/druid.processing.numThreads=.*/druid.processing.numThreads='${DRUID_PROCESSING_NUM_THREADS}'/g' /opt/druid/conf/druid/$1/runtime.properties
     fi
-else
+fi
 
 java ${JAVA_OPTS} -cp /opt/druid/conf/druid/_common:/opt/druid/conf/druid/$1:/opt/druid/lib/* io.druid.cli.Main server $@
