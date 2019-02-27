@@ -43,17 +43,23 @@ if [ "$DRUID_LOGLEVEL" != "-" ]; then
     sed -ri 's/druid.emitter.logging.logLevel=.*/druid.emitter.logging.logLevel='${DRUID_LOGLEVEL}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
+if [ "$DRUID_INDEXER_LOGS_TYPE" == "s3" ]; then
+    sed -ri 's/druid.indexer.logs.type=.*/druid.indexer.logs.type='${DRUID_INDEXER_LOGS_TYPE}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's/druid.indexer.logs.s3Bucket=.*/druid.indexer.logs.s3Bucket='${DRUID_INDEXER_S3BUCKET}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's/druid.indexer.logs.s3Prefix=.*/druid.indexer.logs.s3Prefix='${DRUID_INDEXER_S3PREFIX}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
+fi
+
 if [ "$DRUID_SEGMENTCACHE_LOCATION" != "-" ]; then
     sed -ri 's/druid.segmentCache.locations=[{"path":*,"maxSize"\:100000000000}]/druid.segmentCache.locations=[{"path":'${DRUID_SEGMENTCACHE_LOCATION}',"maxSize"\:100000000000}]/g' /opt/druid/conf/druid/$1/runtime.properties
     sed -ri 's/var\/druid\/segment-cache/'${DRUID_SEGMENTCACHE_LOCATION}'/g' /opt/druid/conf/druid/$1/runtime.properties
 fi
 
 if [ "$1" == "historical" ]; then
-    if [ "$PROCESSING_BUFFER_SIZEBYTES" != "" ]; then
-        sed -ri 's/druid.processing.buffer.sizeBytes=.*/druid.processing.buffer.sizeBytes='${PROCESSING_BUFFER_SIZEBYTES}'/g' /opt/druid/conf/druid/$1/runtime.properties
+    if [ "$DRUID_PROCESSING_BUFFER_SIZEBYTES" != "" ]; then
+        sed -ri 's/druid.processing.buffer.sizeBytes=.*/druid.processing.buffer.sizeBytes='${DRUID_PROCESSING_BUFFER_SIZEBYTES}'/g' /opt/druid/conf/druid/$1/runtime.properties
     fi
-    if [ "$PROCESSING_NUM_THREADS" != "" ]; then
-        sed -ri 's/druid.processing.buffer.sizeBytes=.*/druid.processing.buffer.sizeBytes='${PROCESSING_BUFFER_SIZE}'/g' /opt/druid/conf/druid/$1/runtime.properties
+    if [ "$DRUID_PROCESSING_NUM_THREADS" != "" ]; then
+        sed -ri 's/druid.processing.buffer.sizeBytes=.*/druid.processing.buffer.sizeBytes='${DRUID_PROCESSING_BUFFER_SIZE}'/g' /opt/druid/conf/druid/$1/runtime.properties
     fi
 else
 
