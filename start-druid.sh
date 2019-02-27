@@ -27,7 +27,7 @@ if [ "$DRUID_S3_SECRET_KEY" != "" ]; then
 fi
 
 if [ "$DRUID_S3_ACCESS_KEY" == "" ]; then
-    sed -ri 's#druid.storage.type.*#druid.storage.type='${DRUID_STORAGE_TYPE}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's/druid.storage.type.*/druid.storage.type='${DRUID_STORAGE_TYPE}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
     if [ "$DRUID_STORAGE_TYPE" == "s3" ]; then
         sed -ri 's#druid.storage.bucket.*#druid.storage.bucket='${DRUID_S3_STORAGE_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
         sed -ri 's#druid.storage.baseKey.*#druid.storage.baseKey='${DRUID_S3_STORAGE_BASE_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
@@ -51,9 +51,9 @@ if [ "$DRUID_LOGLEVEL" != "-" ]; then
 fi
 
 if [ "$DRUID_INDEXER_LOGS_TYPE" == "s3" ]; then
-    sed -ri 's/druid.indexer.logs.type=.*/druid.indexer.logs.type='${DRUID_INDEXER_LOGS_TYPE}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
-    sed -ri 's/druid.indexer.logs.s3Bucket=.*/druid.indexer.logs.s3Bucket='${DRUID_INDEXER_LOGS_S3_BUCKET}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
-    sed -ri 's/druid.indexer.logs.s3Prefix=.*/druid.indexer.logs.s3Prefix='${DRUID_INDEXER_LOGS_S3_PREFIX}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's#druid.indexer.logs.type.*#druid.indexer.logs.type='${DRUID_INDEXER_LOGS_TYPE}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's#druid.indexer.logs.s3Bucket.*#druid.indexer.logs.s3Bucket='${DRUID_INDEXER_LOGS_S3_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's/druid.indexer.logs.s3Prefix.*/druid.indexer.logs.s3Prefix='${DRUID_INDEXER_LOGS_S3_PREFIX}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
 if [ "$DRUID_SEGMENTCACHE_LOCATION" != "-" ]; then
@@ -69,5 +69,7 @@ if [ "$1" == "historical" ]; then
         sed -ri 's/druid.processing.numThreads=.*/druid.processing.numThreads='${DRUID_PROCESSING_NUM_THREADS}'/g' /opt/druid/conf/druid/$1/runtime.properties
     fi
 fi
+
+cat /opt/druid/conf/druid/_common/common.runtime.properties
 
 java ${JAVA_OPTS} -cp /opt/druid/conf/druid/_common:/opt/druid/conf/druid/$1:/opt/druid/lib/* io.druid.cli.Main server $@
