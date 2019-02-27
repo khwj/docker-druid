@@ -51,9 +51,9 @@ if [ "$DRUID_LOGLEVEL" != "-" ]; then
 fi
 
 if [ "$DRUID_INDEXER_LOGS_TYPE" == "s3" ]; then
-    sed -ri 's#druid.indexer.logs.type.*#druid.indexer.logs.type='${DRUID_INDEXER_LOGS_TYPE}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's/druid.indexer.logs.type.*/druid.indexer.logs.type='${DRUID_INDEXER_LOGS_TYPE}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
     sed -ri 's#druid.indexer.logs.s3Bucket.*#druid.indexer.logs.s3Bucket='${DRUID_INDEXER_LOGS_S3_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
-    sed -ri 's/druid.indexer.logs.s3Prefix.*/druid.indexer.logs.s3Prefix='${DRUID_INDEXER_LOGS_S3_PREFIX}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's#druid.indexer.logs.s3Prefix.*#druid.indexer.logs.s3Prefix='${DRUID_INDEXER_LOGS_S3_PREFIX}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
 if [ "$DRUID_SEGMENTCACHE_LOCATION" != "-" ]; then
