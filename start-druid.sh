@@ -22,7 +22,7 @@ fi
 if [ "$DRUID_S3_ACCESS_KEY" != "" ]; then
     sed -ri 's#druid.s3.accessKey.*#druid.s3.accessKey='${DRUID_S3_ACCESS_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
-if [ "$DRUID_S3_SECRET_KEY" == "" ]; then
+if [ "$DRUID_S3_SECRET_KEY" != "" ]; then
     sed -ri 's#druid.s3.secretKey.*#druid.s3.secretKey='${DRUID_S3_SECRET_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
@@ -31,7 +31,8 @@ if [ "$DRUID_S3_ACCESS_KEY" == "" ]; then
     if [ "$DRUID_STORAGE_TYPE" == "s3" ]; then
         sed -ri 's#druid.storage.bucket.*#druid.storage.bucket='${DRUID_S3_STORAGE_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
         sed -ri 's#druid.storage.baseKey.*#druid.storage.baseKey='${DRUID_S3_STORAGE_BASE_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
-    elif [ "$DRUID_DEEPSTORAGE_LOCAL_DIR" != "-" ]; then
+    fi
+    if [ "$DRUID_DEEPSTORAGE_LOCAL_DIR" != "-" ]; then
         sed -ri 's/druid.storage.storageDirectory=.*/druid.storage.storageDirectory='${DRUID_DEEPSTORAGE_LOCAL_DIR}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
     fi
 fi
