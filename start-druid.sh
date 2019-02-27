@@ -19,15 +19,21 @@ if [ "$DRUID_EXTENSIONS" != "-" ]; then
     sed -ri 's#druid.extensions.loadList=*#druid.extensions.loadList='${DRUID_EXTENSIONS}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
-sed -ri 's#druid.storage.type.*#druid.storage.type='${STORAGE_TYPE}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
-if [ "$STORAGE_TYPE" == "s3" ]; then
+if [ "$S3_ACCESS_KEY" != "" ]; then
     sed -ri 's#druid.s3.accessKey.*#druid.s3.accessKey='${S3_ACCESS_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+fi
+if [ "$S3_SECRET_KEY" == "" ]; then
     sed -ri 's#druid.s3.secretKey.*#druid.s3.secretKey='${S3_SECRET_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
-    sed -ri 's#druid.storage.bucket.*#druid.storage.bucket='${S3_STORAGE_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
-    sed -ri 's#druid.storage.baseKey.*#druid.storage.baseKey='${S3_STORAGE_BASE_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
-    # sed -ri 's#druid.indexer.logs.s3Bucket.*#druid.indexer.logs.s3Bucket='${S3_INDEXING_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
-elif [ "$DRUID_DEEPSTORAGE_LOCAL_DIR" != "-" ]; then
-    sed -ri 's/druid.storage.storageDirectory=.*/druid.storage.storageDirectory='${DRUID_DEEPSTORAGE_LOCAL_DIR}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
+fi
+
+if [ "$S3_ACCESS_KEY" == "" ]; then
+    sed -ri 's#druid.storage.type.*#druid.storage.type='${STORAGE_TYPE}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    if [ "$STORAGE_TYPE" == "s3" ]; then
+        sed -ri 's#druid.storage.bucket.*#druid.storage.bucket='${S3_STORAGE_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+        sed -ri 's#druid.storage.baseKey.*#druid.storage.baseKey='${S3_STORAGE_BASE_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    elif [ "$DRUID_DEEPSTORAGE_LOCAL_DIR" != "-" ]; then
+        sed -ri 's/druid.storage.storageDirectory=.*/druid.storage.storageDirectory='${DRUID_DEEPSTORAGE_LOCAL_DIR}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
+    fi
 fi
 
 if [ "$DRUID_USE_CONTAINER_IP" != "-" ]; then
@@ -45,8 +51,8 @@ fi
 
 if [ "$DRUID_INDEXER_LOGS_TYPE" == "s3" ]; then
     sed -ri 's/druid.indexer.logs.type=.*/druid.indexer.logs.type='${DRUID_INDEXER_LOGS_TYPE}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
-    sed -ri 's/druid.indexer.logs.s3Bucket=.*/druid.indexer.logs.s3Bucket='${DRUID_INDEXER_S3BUCKET}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
-    sed -ri 's/druid.indexer.logs.s3Prefix=.*/druid.indexer.logs.s3Prefix='${DRUID_INDEXER_S3PREFIX}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's/druid.indexer.logs.s3Bucket=.*/druid.indexer.logs.s3Bucket='${DRUID_INDEXER_LOGS_S3BUCKET}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's/druid.indexer.logs.s3Prefix=.*/druid.indexer.logs.s3Prefix='${DRUID_INDEXER_LOGS_S3PREFIX}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
 if [ "$DRUID_SEGMENTCACHE_LOCATION" != "-" ]; then
@@ -59,7 +65,7 @@ if [ "$1" == "historical" ]; then
         sed -ri 's/druid.processing.buffer.sizeBytes=.*/druid.processing.buffer.sizeBytes='${DRUID_PROCESSING_BUFFER_SIZEBYTES}'/g' /opt/druid/conf/druid/$1/runtime.properties
     fi
     if [ "$DRUID_PROCESSING_NUM_THREADS" != "" ]; then
-        sed -ri 's/druid.processing.buffer.sizeBytes=.*/druid.processing.buffer.sizeBytes='${DRUID_PROCESSING_BUFFER_SIZE}'/g' /opt/druid/conf/druid/$1/runtime.properties
+        sed -ri 's/druid.processing.buffer.sizeBytes=.*/druid.processing.buffer.sizeBytes='${DRUID_PROCESSING_NUM_THREADS}'/g' /opt/druid/conf/druid/$1/runtime.properties
     fi
 else
 
