@@ -28,7 +28,10 @@ RUN apk update \
       # http://central.maven.org/maven2/mysql/mysql-connector-java/$MYSQL_CONNECTOR_VERSION/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar \
     && mkdir -p /opt/druid/extensions/druid-distinctcount \
     && curl -o /opt/druid/extensions/druid-distinctcount/druid-distinctcount-$DRUID_VERSION.jar \
-      http://central.maven.org/maven2/io/druid/extensions/contrib/druid-distinctcount/$DRUID_VERSION/druid-distinctcount-$DRUID_VERSION.jar
+      http://central.maven.org/maven2/io/druid/extensions/contrib/druid-distinctcount/$DRUID_VERSION/druid-distinctcount-$DRUID_VERSION.jar \
+    && mkdir -p /opt/druid/extensions/druid-google-extensions \
+    && curl -o /opt/druid/extensions/druid-google-extensions/druid-google-extensions-$DRUID_VERSION.jar \
+      http://central.maven.org/maven2/io/druid/extensions/contrib/druid-google-extensions/$DRUID_VERSION/druid-google-extensions-$DRUID_VERSION.jar
 
 COPY conf /opt/druid/conf
 COPY start-druid.sh /start-druid.sh
