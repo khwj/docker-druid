@@ -32,6 +32,10 @@ if [ "$DRUID_STORAGE_TYPE" != "" ]; then
         sed -ri 's#druid.storage.bucket.*#druid.storage.bucket='${DRUID_STORAGE_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
         sed -ri 's#druid.storage.baseKey.*#druid.storage.baseKey='${DRUID_STORAGE_BASE_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
     fi
+    if [ "$DRUID_STORAGE_TYPE" == "google" ]; then
+        sed -ri 's#druid.google.bucket.*#druid.google.bucket='${DRUID_GOOGLE_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+        sed -ri 's#druid.google.prefix.*#druid.google.prefix='${DRUID_GOOGLE_PREFIX}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    fi
     if [ "$DRUID_DEEPSTORAGE_LOCAL_DIR" != "-" ]; then
         sed -ri 's/druid.storage.storageDirectory=.*/druid.storage.storageDirectory='${DRUID_DEEPSTORAGE_LOCAL_DIR}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
     fi
