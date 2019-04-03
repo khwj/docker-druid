@@ -20,21 +20,21 @@ if [ "$DRUID_EXTENSIONS" != "" ]; then
 fi
 
 if [ "$DRUID_S3_ACCESS_KEY" != "" ]; then
-    sed -ri 's#druid.s3.accessKey.*#druid.s3.accessKey='${DRUID_S3_ACCESS_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's#\# druid.s3.accessKey.*#druid.s3.accessKey='${DRUID_S3_ACCESS_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 if [ "$DRUID_S3_SECRET_KEY" != "" ]; then
-    sed -ri 's#druid.s3.secretKey.*#druid.s3.secretKey='${DRUID_S3_SECRET_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's#\# druid.s3.secretKey.*#druid.s3.secretKey='${DRUID_S3_SECRET_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
 if [ "$DRUID_STORAGE_TYPE" != "" ]; then
     sed -ri 's/druid.storage.type.*/druid.storage.type='${DRUID_STORAGE_TYPE}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
     if [ "$DRUID_STORAGE_TYPE" == "s3" ]; then
-        sed -ri 's#druid.storage.bucket.*#druid.storage.bucket='${DRUID_STORAGE_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
-        sed -ri 's#druid.storage.baseKey.*#druid.storage.baseKey='${DRUID_STORAGE_BASE_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+        sed -ri 's#\# druid.storage.bucket.*#druid.storage.bucket='${DRUID_STORAGE_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+        sed -ri 's#\# druid.storage.baseKey.*#druid.storage.baseKey='${DRUID_STORAGE_BASE_KEY}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
     fi
     if [ "$DRUID_STORAGE_TYPE" == "google" ]; then
-        sed -ri 's#druid.google.bucket.*#druid.google.bucket='${DRUID_GOOGLE_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
-        sed -ri 's#druid.google.prefix.*#druid.google.prefix='${DRUID_GOOGLE_PREFIX}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+        sed -ri 's#\# druid.google.bucket.*#druid.google.bucket='${DRUID_GOOGLE_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+        sed -ri 's#\# druid.google.prefix.*#druid.google.prefix='${DRUID_GOOGLE_PREFIX}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
     fi
     if [ "$DRUID_DEEPSTORAGE_LOCAL_DIR" != "" ]; then
         sed -ri 's/druid.storage.storageDirectory=.*/druid.storage.storageDirectory='${DRUID_DEEPSTORAGE_LOCAL_DIR}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
@@ -54,10 +54,20 @@ if [ "$DRUID_LOGLEVEL" != "" ]; then
     sed -ri 's/druid.emitter.logging.logLevel=.*/druid.emitter.logging.logLevel='${DRUID_LOGLEVEL}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
+if [ "$DRUID_INDEXER_LOGS_DIRECTORY" != "" ]; then
+    sed -ri 's#\# druid.indexer.logs.directory.*#druid.indexer.logs.directory='${DRUID_INDEXER_LOGS_S3_BUCKET}'#g' /opt/druid/conf/druid/_common/
+fi
+
 if [ "$DRUID_INDEXER_LOGS_TYPE" == "s3" ]; then
     sed -ri 's/druid.indexer.logs.type.*/druid.indexer.logs.type='${DRUID_INDEXER_LOGS_TYPE}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
-    sed -ri 's#druid.indexer.logs.s3Bucket.*#druid.indexer.logs.s3Bucket='${DRUID_INDEXER_LOGS_S3_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
-    sed -ri 's#druid.indexer.logs.s3Prefix.*#druid.indexer.logs.s3Prefix='${DRUID_INDEXER_LOGS_S3_PREFIX}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's#\# druid.indexer.logs.s3Bucket.*#druid.indexer.logs.s3Bucket='${DRUID_INDEXER_LOGS_S3_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's#\# druid.indexer.logs.s3Prefix.*#druid.indexer.logs.s3Prefix='${DRUID_INDEXER_LOGS_S3_PREFIX}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+fi
+
+if [ "$DRUID_INDEXER_LOGS_TYPE" == "google" ]; then
+    sed -ri 's/druid.indexer.logs.type.*/druid.indexer.logs.type='${DRUID_INDEXER_LOGS_TYPE}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's#\# druid.indexer.logs.bucket.*#druid.indexer.logs.bucket='${DRUID_INDEXER_LOGS_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
+    sed -ri 's#\# druid.indexer.logs.prefix.*#druid.indexer.logs.prefix='${DRUID_INDEXER_LOGS_PREFIX}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
 if [ "$DRUID_SEGMENTCACHE_LOCATION" != "" ]; then
@@ -76,4 +86,7 @@ fi
 
 cat /opt/druid/conf/druid/_common/common.runtime.properties
 
-java ${JAVA_OPTS} -cp /opt/druid/conf/druid/_common:/opt/druid/conf/druid/$1:/opt/druid/lib/* io.druid.cli.Main server $@
+java \
+    ${JAVA_OPTS} \
+    -cp /opt/druid/conf/druid/_common:/opt/druid/conf/druid/$1:/opt/druid/lib/* \
+    org.apache.druid.cli.Main server $@
