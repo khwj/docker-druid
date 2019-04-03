@@ -15,7 +15,7 @@ sed -ri 's#druid.metadata.storage.connector.connectURI.*#druid.metadata.storage.
 sed -ri 's#druid.metadata.storage.connector.user.*#druid.metadata.storage.connector.user='${DB_USERNAME}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 sed -ri 's#druid.metadata.storage.connector.password.*#druid.metadata.storage.connector.password='${DB_PASSWORD}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 
-if [ "$DRUID_EXTENSIONS" != "-" ]; then
+if [ "$DRUID_EXTENSIONS" != "" ]; then
     sed -ri 's#druid.extensions.loadList=*#druid.extensions.loadList='${DRUID_EXTENSIONS}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
@@ -36,21 +36,21 @@ if [ "$DRUID_STORAGE_TYPE" != "" ]; then
         sed -ri 's#druid.google.bucket.*#druid.google.bucket='${DRUID_GOOGLE_BUCKET}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
         sed -ri 's#druid.google.prefix.*#druid.google.prefix='${DRUID_GOOGLE_PREFIX}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
     fi
-    if [ "$DRUID_DEEPSTORAGE_LOCAL_DIR" != "-" ]; then
+    if [ "$DRUID_DEEPSTORAGE_LOCAL_DIR" != "" ]; then
         sed -ri 's/druid.storage.storageDirectory=.*/druid.storage.storageDirectory='${DRUID_DEEPSTORAGE_LOCAL_DIR}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
     fi
 fi
 
-if [ "$DRUID_USE_CONTAINER_IP" != "-" ]; then
+if [ "$DRUID_USE_CONTAINER_IP" != "" ]; then
     ipaddress=`ip a|grep "global eth0"|awk '{print $2}'|awk -F '\/' '{print $1}'`
     sed -ri 's/druid.host=.*/druid.host='${ipaddress}'/g' /opt/druid/conf/druid/$1/runtime.properties
-elif [ "$DRUID_HOSTNAME" != "-" ]; then
+elif [ "$DRUID_HOSTNAME" != "" ]; then
     sed -ri 's/druid.host=.*/druid.host='${DRUID_HOSTNAME}'/g' /opt/druid/conf/druid/$1/runtime.properties
 else
     sed -ri 's/druid.host=.*/druid.host='$(hostname -f)'/g' /opt/druid/conf/druid/$1/runtime.properties
 fi
 
-if [ "$DRUID_LOGLEVEL" != "-" ]; then
+if [ "$DRUID_LOGLEVEL" != "" ]; then
     sed -ri 's/druid.emitter.logging.logLevel=.*/druid.emitter.logging.logLevel='${DRUID_LOGLEVEL}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
@@ -60,7 +60,7 @@ if [ "$DRUID_INDEXER_LOGS_TYPE" == "s3" ]; then
     sed -ri 's#druid.indexer.logs.s3Prefix.*#druid.indexer.logs.s3Prefix='${DRUID_INDEXER_LOGS_S3_PREFIX}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
 fi
 
-if [ "$DRUID_SEGMENTCACHE_LOCATION" != "-" ]; then
+if [ "$DRUID_SEGMENTCACHE_LOCATION" != "" ]; then
     sed -ri 's/druid.segmentCache.locations=[{"path":*,"maxSize"\:100000000000}]/druid.segmentCache.locations=[{"path":'${DRUID_SEGMENTCACHE_LOCATION}',"maxSize"\:100000000000}]/g' /opt/druid/conf/druid/$1/runtime.properties
     sed -ri 's/var\/druid\/segment-cache/'${DRUID_SEGMENTCACHE_LOCATION}'/g' /opt/druid/conf/druid/$1/runtime.properties
 fi
