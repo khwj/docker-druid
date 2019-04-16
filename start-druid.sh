@@ -37,12 +37,12 @@ if [ "$DRUID_STORAGE_TYPE" != "" ]; then
         sed -ri 's#\# druid.google.prefix.*#druid.google.prefix='${DRUID_GOOGLE_PREFIX}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
     fi
     if [ "$DRUID_DEEPSTORAGE_LOCAL_DIR" != "" ]; then
-        sed -ri 's/druid.storage.storageDirectory=.*/druid.storage.storageDirectory='${DRUID_DEEPSTORAGE_LOCAL_DIR}'/g' /opt/druid/conf/druid/_common/common.runtime.properties
+        sed -ri 's#\# druid.storage.storageDirectory*#druid.storage.storageDirectory='${DRUID_DEEPSTORAGE_LOCAL_DIR}'#g' /opt/druid/conf/druid/_common/common.runtime.properties
     fi
 fi
 
 if [ "$DRUID_USE_CONTAINER_IP" != "" ]; then
-    ipaddress=`ip a|grep "global eth0"|awk '{print $2}'|awk -F '\/' '{print $1}'`
+    ipaddress=$(ip a | grep "global eth0" | awk '{print $2}' | awk -F '\/' '{print $1}')
     sed -ri 's/druid.host=.*/druid.host='${ipaddress}'/g' /opt/druid/conf/druid/$1/runtime.properties
 elif [ "$DRUID_HOSTNAME" != "" ]; then
     sed -ri 's/druid.host=.*/druid.host='${DRUID_HOSTNAME}'/g' /opt/druid/conf/druid/$1/runtime.properties

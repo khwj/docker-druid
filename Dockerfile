@@ -5,17 +5,17 @@ FROM anapsix/alpine-java:8_server-jre_unlimited
 LABEL MAINTAINER "Khwunchai Jaengsawang <khwunchai.j@ku.th>"
 
 ARG MYSQL_CONNECTOR_VERSION=5.1.38
-ENV DRUID_VERSION=0.13.0-incubating
+ENV DRUID_VERSION=0.14.0-incubating
 
 RUN apk update \
-    && apk add --no-cache bash curl \
-    && mkdir /tmp/druid \
-    && curl https://www-us.apache.org/dist/incubator/druid/$DRUID_VERSION/apache-druid-$DRUID_VERSION-bin.tar.gz \
-      | tar -xzf - -C /opt \
-    && ln -s /opt/apache-druid-$DRUID_VERSION /opt/druid \
-    && mkdir -p /opt/druid/extensions/mysql-metadata-storage \
-    && curl -o /opt/druid/extensions/mysql-metadata-storage/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar \
-      http://central.maven.org/maven2/mysql/mysql-connector-java/$MYSQL_CONNECTOR_VERSION/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar
+  && apk add --no-cache bash curl \
+  && mkdir /tmp/druid \
+  && curl https://www-us.apache.org/dist/incubator/druid/$DRUID_VERSION/apache-druid-$DRUID_VERSION-bin.tar.gz \
+  | tar -xzf - -C /opt \
+  && ln -s /opt/apache-druid-$DRUID_VERSION /opt/druid \
+  && mkdir -p /opt/druid/extensions/mysql-metadata-storage \
+  && curl -o /opt/druid/extensions/mysql-metadata-storage/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar \
+  http://central.maven.org/maven2/mysql/mysql-connector-java/$MYSQL_CONNECTOR_VERSION/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar
 
 COPY conf /opt/druid/conf
 COPY start-druid.sh /start-druid.sh
@@ -26,6 +26,6 @@ RUN java \
   -Ddruid.extensions.hadoopDependenciesDir="/opt/druid/hadoop-dependencies" \
   org.apache.druid.cli.Main tools pull-deps \
   --no-default-hadoop \
-  -c "org.apache.druid.extensions.contrib:druid-google-extensions:0.13.0-incubating"
+  -c "org.apache.druid.extensions.contrib:druid-google-extensions:$DRUID_VERSION"
 
 CMD ["/start-druid.sh"]
