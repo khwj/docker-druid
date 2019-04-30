@@ -86,7 +86,7 @@ fi
 
 if [ "$1" == "middleManager" ]; then
     if [ "$DRUID_INDEXER_RUNNER_JAVA_OPTS" != "" ]; then
-        sed -ri 's/druid.indexer.runner.javaOpts=.*/druid.indexer.runner.javaOpts='${DRUID_INDEXER_RUNNER_JAVA_OPTS}'/g' /opt/druid/conf/druid/$1/runtime.properties
+        sed -ri "s#druid.indexer.runner.javaOpts=.*#druid.indexer.runner.javaOpts=${DRUID_INDEXER_RUNNER_JAVA_OPTS}#g" /opt/druid/conf/druid/$1/runtime.properties
     fi
 fi
 
