@@ -1,6 +1,6 @@
 # Forked from https://github.com/maver1ck/druid-docker
 
-FROM anapsix/alpine-java:8_server-jre_unlimited
+FROM openjdk:8-jre-alpine
 
 LABEL MAINTAINER "Khwunchai Jaengsawang <khwunchai.j@ku.th>"
 
