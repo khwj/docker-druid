@@ -5,7 +5,8 @@ FROM anapsix/alpine-java:8_server-jre_unlimited
 LABEL MAINTAINER "Khwunchai Jaengsawang <khwunchai.j@ku.th>"
 
 ARG MYSQL_CONNECTOR_VERSION=5.1.38
-ENV DRUID_VERSION=0.14.2-incubating
+ARG DRUID_VERSION=0.14.2-incubating
+ARG HADOOP_VERSION=2.9.0
 
 # Druid env variable
 ENV DRUID_HOSTNAME     '-'
@@ -20,14 +21,25 @@ RUN apk update \
     && mkdir /tmp/druid \
     && curl \
       https://www-us.apache.org/dist/incubator/druid/$DRUID_VERSION/apache-druid-$DRUID_VERSION-bin.tar.gz \
+      | tar -xzf - -C /opt \
     && ln -s /opt/apache-druid-$DRUID_VERSION /opt/druid \
-    && curl http://static.druid.io/artifacts/releases/mysql-metadata-storage-$DRUID_VERSION.tar.gz \
-      | tar -xzf - -C /opt/druid/extensions \
-    && curl -L -o /opt/druid/extensions/druid-hdfs-storage/gcs-connector-hadoop2-latest.jar \
+    && curl -Lo /opt/druid/extensions/mysql-metadata-storage/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar \
+      http://central.maven.org/maven2/mysql/mysql-connector-java/$MYSQL_CONNECTOR_VERSION/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar \
+    && curl -Lo /opt/druid/extensions/druid-hdfs-storage/gcs-connector-hadoop2-latest.jar \
       https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-hadoop2-latest.jar \
-    && mkdir -p /opt/druid/extensions/druid-distinctcount \
-    && curl -o /opt/druid/extensions/druid-distinctcount/druid-distinctcount-$DRUID_VERSION.jar \
-      http://central.maven.org/maven2/io/druid/extensions/contrib/druid-distinctcount/$DRUID_VERSION/druid-distinctcount-$DRUID_VERSION.jar
+    && mkdir -p /opt/druid/extensions/druid-distinctcount
+
+RUN java -cp "/opt/druid/lib/*" \
+  -Dlog4j.configurationFile=/opt/druid/conf/_common/log4j2.xml \
+  -Ddruid.extensions.directory=/opt/druid/extensions \
+  -Ddruid.extensions.hadoopDependenciesDir=/opt/druid/hadoop-dependencies \
+  org.apache.druid.cli.Main tools pull-deps \
+  --no-default-hadoop \
+  -c "org.apache.druid.extensions.contrib:druid-time-min-max:$DRUID_VERSION" \
+  -c "org.apache.druid.extensions.contrib:materialized-view-maintenance:$DRUID_VERSION" \
+  -c "org.apache.druid.extensions.contrib:materialized-view-selection:$DRUID_VERSION" \
+  -h "org.apache.hadoop:hadoop-client:$HADOOP_VERSION"
+
 
 COPY conf /opt/druid/conf
 COPY start-druid.sh /start-druid.sh
