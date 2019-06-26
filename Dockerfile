@@ -30,6 +30,7 @@ RUN java \
   -Ddruid.extensions.hadoopDependenciesDir="/opt/druid/hadoop-dependencies" \
   org.apache.druid.cli.Main tools pull-deps \
   --no-default-hadoop \
+  -c "org.apache.druid.extensions.contrib:druid-google-extensions:$DRUID_VERSION" \
   -c "org.apache.druid.extensions.contrib:druid-time-min-max:$DRUID_VERSION" \
   -c "org.apache.druid.extensions.contrib:materialized-view-maintenance:$DRUID_VERSION" \
   -c "org.apache.druid.extensions.contrib:materialized-view-selection:$DRUID_VERSION" \
