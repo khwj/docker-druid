@@ -5,7 +5,7 @@ FROM openjdk:8-jre-alpine
 LABEL MAINTAINER "Khwunchai Jaengsawang <khwunchai.j@ku.th>"
 
 ARG MYSQL_CONNECTOR_VERSION=5.1.38
-ARG DRUID_VERSION=0.13.0-incubating
+ARG DRUID_VERSION=0.15.0-incubating
 ARG HADOOP_VERSION=2.9.0
 
 RUN apk update \
@@ -29,7 +29,6 @@ RUN java \
   -Ddruid.extensions.hadoopDependenciesDir="/opt/druid/hadoop-dependencies" \
   org.apache.druid.cli.Main tools pull-deps \
   --no-default-hadoop \
-  -c "org.apache.druid.extensions.contrib:druid-google-extensions:$DRUID_VERSION" \
   -c "org.apache.druid.extensions.contrib:druid-time-min-max:$DRUID_VERSION" \
   -c "org.apache.druid.extensions.contrib:materialized-view-maintenance:$DRUID_VERSION" \
   -c "org.apache.druid.extensions.contrib:materialized-view-selection:$DRUID_VERSION" \
