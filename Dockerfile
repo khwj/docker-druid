@@ -9,17 +9,16 @@ ARG DRUID_VERSION=0.13.0-incubating
 ARG HADOOP_VERSION=2.9.0
 
 RUN apk update \
-  && apk add --no-cache bash curl \
-  && mkdir /tmp/druid \
+  && apk add --no-cache bash curl tar \
   && curl \
   https://www-us.apache.org/dist/incubator/druid/$DRUID_VERSION/apache-druid-$DRUID_VERSION-bin.tar.gz \
   | tar -xzf - -C /opt \
   && ln -s /opt/apache-druid-$DRUID_VERSION /opt/druid \
+  && mkdir -p /tmp/druid /opt/druid/extensions/druid-hdfs-storage /opt/druid/extensions/mysql-metadata-storage \
   && curl -Lo /opt/druid/extensions/mysql-metadata-storage/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar \
   http://central.maven.org/maven2/mysql/mysql-connector-java/$MYSQL_CONNECTOR_VERSION/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar \
   && curl -Lo /opt/druid/extensions/druid-hdfs-storage/gcs-connector-hadoop2-latest.jar \
-  https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-hadoop2-latest.jar \
-  && mkdir -p /opt/druid/extensions/druid-distinctcount
+  https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-hadoop2-latest.jar
 
 COPY conf /opt/druid/conf
 COPY start-druid.sh /start-druid.sh
