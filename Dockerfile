@@ -5,7 +5,7 @@ FROM openjdk:8-jre-alpine
 LABEL MAINTAINER "Khwunchai Jaengsawang <khwunchai.j@ku.th>"
 
 ARG MYSQL_CONNECTOR_VERSION=5.1.38
-ARG DRUID_VERSION=0.15.0-incubating
+ARG DRUID_VERSION=0.13.0-incubating
 ARG HADOOP_VERSION=2.9.0
 
 RUN apk update \
